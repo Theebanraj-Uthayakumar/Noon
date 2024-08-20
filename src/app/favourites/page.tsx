@@ -1,9 +1,9 @@
 "use client";
 import React from "react";
-import Post from "../components/Post";
-import PostList from "../components/PostList";
+import Post from "../../components/Post";
+import PostList from "../../components/PostList";
 
-const Home = () => {
+const Favorites = () => {
   return (
     <PostList>
       <Post
@@ -12,7 +12,7 @@ const Home = () => {
         postImage="./post/Liza Summer Post.jpg"
         postTitle={"Liza Summer Post"}
         price="AED 200"
-        isFavourite={false}
+        isFavourite={true}
         content="Leaf iPhone Case Hard Plastic AED 230 #iphone #cases"
         likes={32}
         hashtags="#iphone #cases"
@@ -24,7 +24,7 @@ const Home = () => {
         postImage="./post/Post Photos Ernest Westphal.jpg"
         postTitle="Post Photos Ernest Westphal"
         price="AED 300"
-        isFavourite={false}
+        isFavourite={true}
         content="Awesome Thor Movie Poster"
         likes={100}
         hashtags="#thor #movie"
@@ -34,4 +34,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default Favorites;

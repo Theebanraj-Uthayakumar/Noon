@@ -1,22 +1,35 @@
+import React, { ReactNode } from "react";
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import "./globals.css";
-
-const inter = Inter({ subsets: ["latin"] });
+import FooterNav from "../components/FooterNav";
+import AppContainer from "../components/AppContainer";
 
 export const metadata: Metadata = {
-  title: "Lama Dev School Management Dashboard",
-  description: "Next.js School Management System",
+  title: "Noon",
+  description: "Sr. SOftware Engineer Assessment",
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+interface RootLayoutProps {
+  children: ReactNode;
+}
+
+const RootLayout: React.FC<RootLayoutProps> = ({ children }) => {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <head>
+        <meta charSet="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>{metadata.title as ReactNode}</title>
+        <meta name="description" content={metadata.description ?? ""} />
+      </head>
+      <body>
+        <AppContainer>
+          {children}
+          <FooterNav />
+        </AppContainer>
+      </body>
     </html>
   );
-}
+};
+
+export default RootLayout;
