@@ -1,35 +1,65 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Post from "../../components/Post";
 import PostList from "../../components/PostList";
+import { getAllPosts } from "../../service/posts.service";
+import { PostProps } from "../../shared/interfaces";
+import { Loading } from "../../components/Spinner";
+import { NoPostsMessage } from "../../components/NoPostsMessage";
 
 const Favorites = () => {
+  const [posts, setPosts] = useState<PostProps[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    getAllPostsFun();
+  }, []);
+
+  const getAllPostsFun = async () => {
+    try {
+      const response = await getAllPosts(true);
+      setPosts(response.data);
+      setLoading(false);
+    } catch (error) {
+      console.error("Failed to load posts:", error);
+      setError("Failed to load posts. Please try again later.");
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return <Loading />;
+  }
+
+  if (error) {
+    return <p>{error}</p>;
+  }
+
+  if (posts.length === 0) {
+    return <NoPostsMessage message="No favorite posts available." />;
+  }
+
   return (
     <PostList>
-      <Post
-        profileImage="./profile/LinkedIn Profile Picture.jpg"
-        username="tracymcgrady"
-        postImage="./post/Liza Summer Post.jpg"
-        postTitle={"Liza Summer Post"}
-        price="AED 200"
-        isFavourite={true}
-        content="Leaf iPhone Case Hard Plastic AED 230 #iphone #cases"
-        likes={32}
-        hashtags="#iphone #cases"
-        totalNumberOfCommends={12}
-      />
-      <Post
-        profileImage="./profile/Profile Picture Minan1398.jpg"
-        username="theodorelincoln"
-        postImage="./post/Post Photos Ernest Westphal.jpg"
-        postTitle="Post Photos Ernest Westphal"
-        price="AED 300"
-        isFavourite={true}
-        content="Awesome Thor Movie Poster"
-        likes={100}
-        hashtags="#thor #movie"
-        totalNumberOfCommends={50}
-      />
+      {posts.map((post: any, index: number) => (
+        <div key={index}>
+          <Post
+            id={post._id}
+            profileImage={post.profileImage}
+            username={post.username}
+            postImage={post.postImage}
+            postTitle={post.postTitle}
+            price={post.price}
+            isFavourite={post.isFavourite}
+            content={post.content}
+            likes={post.likes}
+            hashtags={post.hashtags}
+            totalNumberOfCommends={post.totalNumberOfCommends}
+            refreshPosts={getAllPostsFun}
+          />
+        </div>
+      ))}
     </PostList>
   );
 };
