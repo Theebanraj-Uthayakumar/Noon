@@ -1,4 +1,5 @@
 export interface PostProps {
+  id: string;
   profileImage: string;
   username: string;
   postImage: string;
