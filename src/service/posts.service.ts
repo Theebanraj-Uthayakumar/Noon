@@ -2,10 +2,10 @@ import ApiConstants from "../shared/constants/apiConstants";
 import { PostProps } from "../shared/interfaces";
 import CommonService from "./common.service";
 
-export const getAllPosts = async () => {
+export const getAllPosts = async (isFavourite: boolean) => {
   const response = await CommonService?.invokeHttpCallFetch(
     "GET",
-    ApiConstants?.GET_POST_API
+    `${ApiConstants?.GET_POST_API}?isFavourite=${isFavourite}`
   );
   return response;
 };
@@ -36,11 +36,10 @@ export const deletePost = async (id: string) => {
   return response;
 };
 
-export const addFavorite = async (id: string, userid: string) => {
+export const addFavorite = async (id: string) => {
   const response = await CommonService?.invokeHttpCallFetch(
-    "POST",
-    `${ApiConstants?.ADD_FAVORITE_API}/${id}`,
-    { userid }
+    "PUT",
+    `${ApiConstants?.ADD_FAVORITE_API}/${id}`
   );
   return response;
 };
