@@ -2,19 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { FaHeart } from "react-icons/fa";
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
-
-interface PostProps {
-  profileImage: string;
-  username: string;
-  postImage: string;
-  postTitle: string;
-  price: string;
-  isFavourite: boolean;
-  content: string;
-  likes: number;
-  hashtags: string;
-  totalNumberOfCommends: number;
-}
+import { PostProps } from "../../shared/interfaces";
 
 const Post = ({
   profileImage,
