@@ -3,8 +3,14 @@ import styled from "styled-components";
 import { FaHeart } from "react-icons/fa";
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
 import { PostProps } from "../../shared/interfaces";
+import { addFavorite } from "../../service/posts.service";
+
+interface PostComponentProps extends PostProps {
+  refreshPosts: () => void;
+}
 
 const Post = ({
+  id,
   profileImage,
   username,
   postImage,
@@ -15,42 +21,56 @@ const Post = ({
   likes,
   hashtags,
   totalNumberOfCommends,
-}: PostProps) => (
-  <PostContainer>
-    <PostHeader>
-      <ProfileImage src={profileImage} alt={username} />
-      <Username>{username}</Username>
-    </PostHeader>
-    <ImageContainer>
-      <PostImage src={postImage} alt="Post Image" />
-      <ImageContent>
-        <div>
-          <PostTitle>{postTitle}</PostTitle>
-          <Price>{price && <div>{price}</div>}</Price>
-        </div>
+  refreshPosts,
+}: PostComponentProps) => {
+  
+  const handleFav = async () => {
+    try {
+      const res = await addFavorite(id);
+      refreshPosts();
+      console.log("Favorite added successfully:", res);
+    } catch (error) {
+      console.error("Error adding favorite:", error);
+    }
+  };
 
-        <HeartIconContainer>
-          {isFavourite ? (
-            <AiFillHeart />
-          ) : (
-            <AiOutlineHeart style={{ color: "white" }} />
-          )}
-        </HeartIconContainer>
-      </ImageContent>
-    </ImageContainer>
-    <PostContent>
-      <LikeComment>
-        <LikeIcon>
-          <FaHeart />
-        </LikeIcon>
-        {likes} likes
-      </LikeComment>
-      {content}
-      <HashTags>{hashtags}</HashTags>
-      <Comments>View {totalNumberOfCommends} comments</Comments>
-    </PostContent>
-  </PostContainer>
-);
+  return (
+    <PostContainer>
+      <PostHeader>
+        <ProfileImage src={profileImage} alt={username} />
+        <Username>{username}</Username>
+      </PostHeader>
+      <ImageContainer>
+        <PostImage src={postImage} alt="Post Image" />
+        <ImageContent>
+          <div>
+            <PostTitle>{postTitle}</PostTitle>
+            <Price>{price && <div>{price}</div>}</Price>
+          </div>
+
+          <HeartIconContainer onClick={handleFav}>
+            {isFavourite ? (
+              <AiFillHeart />
+            ) : (
+              <AiOutlineHeart style={{ color: "white" }} />
+            )}
+          </HeartIconContainer>
+        </ImageContent>
+      </ImageContainer>
+      <PostContent>
+        <LikeComment>
+          <LikeIcon>
+            <FaHeart />
+          </LikeIcon>
+          {likes} likes
+        </LikeComment>
+        {content}
+        <HashTags>{hashtags}</HashTags>
+        <Comments>View {totalNumberOfCommends} comments</Comments>
+      </PostContent>
+    </PostContainer>
+  );
+};
 
 export default Post;
 
