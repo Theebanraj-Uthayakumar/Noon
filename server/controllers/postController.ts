@@ -49,7 +49,14 @@ export const createPost = async (
 
 export const getPosts = async (req: Request, res: Response): Promise<void> => {
   try {
-    const posts = await Post.find();
+    const { isFavourite } = req.query;
+    const filter: any = {};
+
+    if (isFavourite !== undefined) {
+      filter.isFavourite = isFavourite === "true";
+    }
+
+    const posts = await Post.find(filter);
     return successMessage(posts, res);
   } catch (err) {
     console.error("Error fetching posts:", err);
