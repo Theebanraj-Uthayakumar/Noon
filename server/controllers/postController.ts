@@ -1,16 +1,18 @@
 import { Request, Response } from "express";
 import Post from "../models/Post";
 import { errorMessage, successMessage } from "../utils/responseHandler";
-
-interface AuthRequest extends Request {
-  user?: any;
-}
+import { validatePostData } from "../utils/helper";
 
 export const createPost = async (
-  req: AuthRequest,
+  req: Request,
   res: Response
 ): Promise<void> => {
   try {
+    const validationError = validatePostData(req.body);
+    if (validationError) {
+      return errorMessage(res, validationError, 400);
+    }
+
     const {
       profileImage,
       username,
@@ -45,10 +47,7 @@ export const createPost = async (
   }
 };
 
-export const getPosts = async (
-  req: AuthRequest,
-  res: Response
-): Promise<void> => {
+export const getPosts = async (req: Request, res: Response): Promise<void> => {
   try {
     const posts = await Post.find();
     return successMessage(posts, res);
@@ -59,7 +58,7 @@ export const getPosts = async (
 };
 
 export const updatePost = async (
-  req: AuthRequest,
+  req: Request,
   res: Response
 ): Promise<void> => {
   try {
@@ -68,18 +67,7 @@ export const updatePost = async (
       return errorMessage(res, "Post not found", 404);
     }
 
-    post.profileImage = req.body.profileImage || post.profileImage;
-    post.username = req.body.username || post.username;
-    post.postImage = req.body.postImage || post.postImage;
-    post.postTitle = req.body.postTitle || post.postTitle;
-    post.price = req.body.price || post.price;
-    post.isFavourite = req.body.isFavourite || post.isFavourite;
-    post.content = req.body.content || post.content;
-    post.likes = req.body.likes || post.likes;
-    post.hashtags = req.body.hashtags || post.hashtags;
-    post.totalNumberOfCommends =
-      req.body.totalNumberOfCommends || post.totalNumberOfCommends;
-
+    Object.assign(post, req.body);
     await post.save();
     return successMessage(post, res);
   } catch (err) {
@@ -89,7 +77,7 @@ export const updatePost = async (
 };
 
 export const deletePost = async (
-  req: AuthRequest,
+  req: Request,
   res: Response
 ): Promise<void> => {
   try {
@@ -107,7 +95,7 @@ export const deletePost = async (
 };
 
 export const addFavorite = async (
-  req: AuthRequest,
+  req: Request,
   res: Response
 ): Promise<void> => {
   try {
