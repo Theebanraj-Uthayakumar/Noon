@@ -1,35 +1,45 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Post from "../components/Post";
 import PostList from "../components/PostList";
+import { getAllPosts } from "../service/posts.service";
 
 const Home = () => {
+  const [posts, setPosts] = useState([]);
+
+  useEffect(() => {
+    getAllPostsFun();
+  }, []);
+
+  const getAllPostsFun = async () => {
+    try {
+      const response = await getAllPosts(false);
+      setPosts(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <PostList>
-      <Post
-        profileImage="./profile/LinkedIn Profile Picture.jpg"
-        username="tracymcgrady"
-        postImage="./post/Liza Summer Post.jpg"
-        postTitle={"Liza Summer Post"}
-        price="AED 200"
-        isFavourite={false}
-        content="Leaf iPhone Case Hard Plastic AED 230 #iphone #cases"
-        likes={32}
-        hashtags="#iphone #cases"
-        totalNumberOfCommends={12}
-      />
-      <Post
-        profileImage="./profile/Profile Picture Minan1398.jpg"
-        username="theodorelincoln"
-        postImage="./post/Post Photos Ernest Westphal.jpg"
-        postTitle="Post Photos Ernest Westphal"
-        price="AED 300"
-        isFavourite={false}
-        content="Awesome Thor Movie Poster"
-        likes={100}
-        hashtags="#thor #movie"
-        totalNumberOfCommends={50}
-      />
+      {posts?.map((post: any, index: any) => (
+        <div key={index}>
+          <Post
+            id={post._id}
+            profileImage={post?.profileImage}
+            username={post.username}
+            postImage={post.postImage}
+            postTitle={post.postTitle}
+            price={post.price}
+            isFavourite={post.isFavourite}
+            content={post.content}
+            likes={post.likes}
+            hashtags={post.hashtags}
+            totalNumberOfCommends={post.totalNumberOfCommends}
+            refreshPosts={getAllPostsFun}
+          />
+        </div>
+      ))}
     </PostList>
   );
 };
