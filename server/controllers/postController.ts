@@ -111,11 +111,15 @@ export const addFavorite = async (
       return errorMessage(res, "Post not found", 404);
     }
 
-    post.isFavourite = true;
+    post.isFavourite = !post.isFavourite;
     await post.save();
-    return successMessage(post, res, "Post added to favorites");
+
+    const message = post.isFavourite
+      ? "Post added to favorites"
+      : "Post removed from favorites";
+    return successMessage(post, res, message);
   } catch (err) {
-    console.error("Error adding favorite:", err);
+    console.error("Error toggling favorite:", err);
     return errorMessage(res, "Server error", 500);
   }
 };
