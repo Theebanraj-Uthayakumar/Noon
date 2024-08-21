@@ -4,8 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "concurrently \"npm run dev:next\" \"npm run dev:server\"",
-    "dev:next": "next dev",
-    "dev:server": "nodemon --watch server --ext ts --exec ts-node server/server.ts",
+    "dev:next": "tsc --project tsconfig.next.json --noEmit && next dev",
+    "dev:server": "tsc --project tsconfig.server.json && nodemon --watch server --ext ts --exec ts-node -r tsconfig-paths/register server/server.ts",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
@@ -38,6 +38,7 @@
     "postcss": "^8",
     "tailwindcss": "^3.4.1",
     "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
     "typescript": "^5.5.4"
   }
 }
